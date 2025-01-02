@@ -92,7 +92,7 @@ def get_workflow_searches():
                         workflow_searches.append({
                             "title": f"{workflow_name}: {keyword}",
                             "subtitle": f"[Workflow{creator_text}] {display_text}{action_text}",
-                            "arg": ','.join(destinations) if destinations else keyword,
+                            "arg": keyword,
                             "variables": {
                                 "keyword": keyword,
                                 "display_text": display_text,
@@ -135,7 +135,7 @@ def get_built_in_searches():
                     built_in_searches.append({
                         "title": data['keyword'],
                         "subtitle": f"[Web Search] Search {search_dir.title()} for {{query}}... → {url_template}",
-                        "arg": url_template,
+                        "arg": data['keyword'],
                         "variables": {
                             "keyword": data['keyword'],
                             "display_text": f"Search {search_dir.title()}",
@@ -173,7 +173,7 @@ def get_web_searches():
                 items.append({
                     "title": site_data.get('keyword', ''),
                     "subtitle": f"[Web Search] {site_data.get('text', '')} → {site_data.get('url', '')}",
-                    "arg": site_data.get('url', ''),
+                    "arg": site_data.get('keyword', ''),
                     "variables": {
                         "keyword": site_data.get('keyword', ''),
                         "display_text": site_data.get('text', ''),
@@ -196,6 +196,12 @@ def get_web_searches():
 if __name__ == "__main__":
     # Get query from Alfred
     query = sys.argv[1] if len(sys.argv) > 1 else ""
+    
+    # Debug logging
+    debug_log_path = os.path.expanduser('~/Desktop/alfred_debug.log')
+    with open(debug_log_path, 'a') as f:
+        f.write(f"\nReceived args: {sys.argv}\n")
+        f.write(f"Query: {query}\n")
     
     # Get and filter results
     results = get_web_searches()
