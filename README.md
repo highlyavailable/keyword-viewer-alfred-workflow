@@ -1,1 +1,1 @@
-# web-searchx-alfred-workflow
+# keyword-viewer-alfred-workflow
