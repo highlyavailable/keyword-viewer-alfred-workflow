@@ -227,9 +227,14 @@ if __name__ == "__main__":
                 continue
                 
             # Search across all fields using the searchable_text
-            if (search_query in item["variables"].get("searchable_text", "") or
-                search_query in item["title"].lower() or 
-                search_query in item["subtitle"].lower()):
+            if (
+                (item["variables"]["type"] == "websearch" and search_query in item["subtitle"].lower()) or
+                (item["variables"]["type"] == "workflow" and (
+                    search_query in item["variables"].get("searchable_text", "") or
+                    search_query in item["title"].lower() or 
+                    search_query in item["subtitle"].lower()
+                ))
+            ):
                 filtered_items.append(item)
         
         results["items"] = filtered_items
