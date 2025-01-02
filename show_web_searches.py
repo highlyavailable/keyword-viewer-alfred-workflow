@@ -195,32 +195,39 @@ def get_web_searches():
 
 if __name__ == "__main__":
     # Get query from Alfred
-    query = sys.argv[1] if len(sys.argv) > 1 else ""
+    args = sys.argv[1:] if len(sys.argv) > 1 else []
     
     # Debug logging
     debug_log_path = os.path.expanduser('~/Desktop/alfred_debug.log')
     with open(debug_log_path, 'a') as f:
         f.write(f"\nReceived args: {sys.argv}\n")
-        f.write(f"Query: {query}\n")
+        f.write(f"Args: {args}\n")
     
     # Get and filter results
     results = get_web_searches()
     
-    if query:
+    if args:
         filtered_items = []
-        query_parts = query.lower().split()
+        first_arg = args[0].lower()
         
         # Check for type filter as first word
         filter_type = None
-        if query_parts[0] == "web":
-            filter_type = "websearch"
-            query_parts = query_parts[1:]  # Remove the filter word
-        elif query_parts[0] == "wf":
-            filter_type = "workflow"
-            query_parts = query_parts[1:]  # Remove the filter word
+        search_query = ""
         
-        # Reconstruct remaining search query
-        search_query = " ".join(query_parts)
+        if first_arg == "_web":
+            filter_type = "websearch"
+            search_query = args[1] if len(args) > 1 else ""
+        elif first_arg == "_work":
+            filter_type = "workflow"
+            search_query = args[1] if len(args) > 1 else ""
+        elif first_arg == "web":
+            filter_type = "websearch"
+            search_query = args[1] if len(args) > 1 else ""
+        elif first_arg == "wf":
+            filter_type = "workflow"
+            search_query = args[1] if len(args) > 1 else ""
+        else:
+            search_query = first_arg
         
         for item in results["items"]:
             # Apply type filter if specified
@@ -232,16 +239,17 @@ if __name__ == "__main__":
                 filtered_items.append(item)
                 continue
                 
-            # Search across all fields using the searchable_text
-            if (
-                (item["variables"]["type"] == "websearch" and search_query in item["subtitle"].lower()) or
-                (item["variables"]["type"] == "workflow" and (
-                    search_query in item["variables"].get("searchable_text", "") or
+            # For web searches, look for the search term in all relevant fields
+            if item["variables"]["type"] == "websearch":
+                searchable_text = f"{item['title']} {item['subtitle']} {item['variables']['keyword']} {item['variables']['display_text']}".lower()
+                if search_query in searchable_text:
+                    filtered_items.append(item)
+            # For workflows, use the existing searchable_text field
+            elif item["variables"]["type"] == "workflow":
+                if (search_query in item["variables"].get("searchable_text", "") or
                     search_query in item["title"].lower() or 
-                    search_query in item["subtitle"].lower()
-                ))
-            ):
-                filtered_items.append(item)
+                    search_query in item["subtitle"].lower()):
+                    filtered_items.append(item)
         
         results["items"] = filtered_items
     
