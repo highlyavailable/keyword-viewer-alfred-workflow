@@ -1,0 +1,33 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Create workflow file
+      run: |
+        zip -r "Keyword Viewer.alfredworkflow" . \
+        -x "*.git*" \
+        -x ".github/*" \
+        -x ".DS_Store" \
+        -x ".cursorrules" \
+        -x "*.md"
+    
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: "Keyword Viewer.alfredworkflow"
+        draft: false
+        prerelease: false
+        generate_release_notes: true 
