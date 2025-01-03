@@ -18,7 +18,6 @@ jobs:
       run: |
         # Create a clean directory for the workflow
         mkdir workflow_build
-        cp info.plist workflow_build/
         cd workflow_build
         zip -r "../Keyword Viewer.alfredworkflow" .
     
