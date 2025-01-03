@@ -97,7 +97,6 @@ def get_workflow_searches():
                             display_text = text or title or subtext or workflow_desc or "No description"
                         
                         workflow_type = obj.get('type').split('.')[-1]
-                        action_text = f" ({', '.join(actions)})" if actions else ""
                         creator_text = f" by {workflow_creator}" if workflow_creator else ""
                         
                         # Create searchable text that includes all relevant fields
@@ -105,7 +104,7 @@ def get_workflow_searches():
                         
                         workflow_searches.append({
                             "title": f"{workflow_name}: {keyword}",
-                            "subtitle": f"[Workflow{creator_text}] {display_text}{action_text}",
+                            "subtitle": f"[Workflow{creator_text}] {display_text}",
                             "arg": keyword,
                             "variables": {
                                 "keyword": keyword,
@@ -230,18 +229,18 @@ if __name__ == "__main__":
         
         if first_arg == "_web":
             filter_type = "websearch"
-            search_query = args[1] if len(args) > 1 else ""
+            search_query = " ".join(args[1:]).lower() if len(args) > 1 else ""
         elif first_arg == "_work":
             filter_type = "workflow"
-            search_query = args[1] if len(args) > 1 else ""
+            search_query = " ".join(args[1:]).lower() if len(args) > 1 else ""
         elif first_arg == "web":
             filter_type = "websearch"
-            search_query = args[1] if len(args) > 1 else ""
+            search_query = " ".join(args[1:]).lower() if len(args) > 1 else ""
         elif first_arg == "wf":
             filter_type = "workflow"
-            search_query = args[1] if len(args) > 1 else ""
+            search_query = " ".join(args[1:]).lower() if len(args) > 1 else ""
         else:
-            search_query = first_arg
+            search_query = " ".join(args).lower()
         
         for item in results["items"]:
             # Apply type filter if specified
