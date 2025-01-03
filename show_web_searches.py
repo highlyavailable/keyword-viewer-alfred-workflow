@@ -44,12 +44,26 @@ def get_workflow_searches():
             workflow_desc = data.get('description', '')
             workflow_creator = data.get('createdby', '')
             workflow_website = data.get('webaddress', '')
+            
+            # Get default values from user configuration
+            default_values = {}
+            user_config = data.get('userconfigurationconfig', [])
+            for config_item in user_config:
+                var_name = config_item.get('variable', '')
+                if var_name:
+                    default_values[var_name] = config_item.get('config', {}).get('default', '')
                 
             # Look for keyword inputs
             for obj in data['objects']:
                 if obj.get('type') in input_types:
                     config = obj.get('config', {})
-                    keyword = config.get('keyword')
+                    keyword = config.get('keyword', '')
+                    if keyword and isinstance(keyword, str):
+                        # If it's a variable reference, get the default value
+                        if keyword.startswith('{var:') and keyword.endswith('}'):
+                            var_name = keyword[5:-1]  # Strip {var: and }
+                            keyword = default_values.get(var_name, var_name)
+                    
                     text = config.get('text', '')
                     subtext = config.get('subtext', '')
                     title = config.get('title', '')
@@ -133,8 +147,8 @@ def get_built_in_searches():
                 
                 if url_template:
                     built_in_searches.append({
-                        "title": data['keyword'],
-                        "subtitle": f"[Web Search] Search {search_dir.title()} for {{query}}... → {url_template}",
+                        "title": f"{search_dir.title()}: {data['keyword']}",
+                        "subtitle": f"[Web Search] Search {search_dir.title()} for {{query}}",
                         "arg": data['keyword'],
                         "variables": {
                             "keyword": data['keyword'],
@@ -171,8 +185,8 @@ def get_web_searches():
                     continue
                     
                 items.append({
-                    "title": site_data.get('keyword', ''),
-                    "subtitle": f"[Web Search] {site_data.get('text', '')} → {site_data.get('url', '')}",
+                    "title": f"{site_data.get('text', '')}: {site_data.get('keyword', '')}",
+                    "subtitle": f"[Web Search] {site_data.get('url', '')}",
                     "arg": site_data.get('keyword', ''),
                     "variables": {
                         "keyword": site_data.get('keyword', ''),
