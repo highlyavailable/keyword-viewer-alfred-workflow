@@ -16,12 +16,11 @@ jobs:
     
     - name: Create workflow file
       run: |
-        zip -r "Keyword Viewer.alfredworkflow" . \
-        -x "*.git*" \
-        -x ".github/*" \
-        -x ".DS_Store" \
-        -x ".cursorrules" \
-        -x "*.md"
+        # Create a clean directory for the workflow
+        mkdir workflow_build
+        cp info.plist workflow_build/
+        cd workflow_build
+        zip -r "../Keyword Viewer.alfredworkflow" .
     
     - name: Create Release
       id: create_release
