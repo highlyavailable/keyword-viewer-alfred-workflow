@@ -16,16 +16,17 @@ jobs:
     
     - name: Create workflow file
       run: |
-        # Create a clean directory for the workflow
-        mkdir workflow_build
-        cd workflow_build
-        zip -r "../Keyword Viewer.alfredworkflow" .
+        # List all files for debugging
+        ls -la
+        
+        # Create the workflow package directly from root
+        zip -r "Keyword-Viewer.alfredworkflow" . -x "*.git*" -x "*.github*"
     
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v1
       with:
-        files: "Keyword Viewer.alfredworkflow"
+        files: "Keyword-Viewer.alfredworkflow"
         draft: false
         prerelease: false
         generate_release_notes: true 
