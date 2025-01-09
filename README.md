@@ -44,3 +44,5 @@ Perfect for power users with many workflows or anyone who wants to better organi
 - Add workflow compatibility information (minimum Alfred version)
 - Show related keywords from the same workflow
 - Include workflow hotkey information if configured
+
+1/8
