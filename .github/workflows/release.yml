@@ -16,11 +16,21 @@ jobs:
     
     - name: Create workflow file
       run: |
-        # List all files for debugging
+        # List contents before zipping
+        echo "Current directory contents:"
         ls -la
         
-        # Create the workflow package directly from root
-        zip -r "Keyword-Viewer.alfredworkflow" . -x "*.git*" -x "*.github*"
+        # Create zip with specific files
+        zip -r "Keyword-Viewer.alfredworkflow" \
+            info.plist \
+            icon.png \
+            src/ \
+            README.md \
+            .gitignore
+        
+        # Verify zip contents
+        echo "Zip contents:"
+        unzip -l "Keyword-Viewer.alfredworkflow"
     
     - name: Create Release
       id: create_release
