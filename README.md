@@ -9,6 +9,7 @@ This workflow helps you discover and search through all keywords used in your Al
 - Use filters to narrow down results:
   - `kw _web` to show only web search keywords
   - `kw _work` to show only workflow keywords
+  - `kw _alias` to show only shell aliases
   - Add search terms after any filter: `kw _web google maps` or `kw _work git push`
 
 ## What You'll See
@@ -21,6 +22,9 @@ Each result shows:
 - For workflows:
   - Title: `WorkflowName: keyword`
   - Subtitle: `[Workflow by Creator] Description`
+- For shell aliases:
+  - Title: `AliasName: alias`
+  - Subtitle: `[Shell Alias] Actual command`
 
 ## Why It's Useful
 
