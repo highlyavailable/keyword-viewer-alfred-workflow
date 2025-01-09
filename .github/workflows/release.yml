@@ -21,7 +21,7 @@ jobs:
         ls -la
         
         # Create zip with specific files
-        zip -r "Keyword-Viewer.alfredworkflow" \
+        zip -r "Keyword Viewer.alfredworkflow" \
             info.plist \
             icon.png \
             src/ \
@@ -30,13 +30,13 @@ jobs:
         
         # Verify zip contents
         echo "Zip contents:"
-        unzip -l "Keyword-Viewer.alfredworkflow"
+        unzip -l "Keyword Viewer.alfredworkflow"
     
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v1
       with:
-        files: "Keyword-Viewer.alfredworkflow"
+        files: "Keyword Viewer.alfredworkflow"
         draft: false
         prerelease: false
         generate_release_notes: true 
